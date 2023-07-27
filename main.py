@@ -10,6 +10,30 @@ timer = pygame.time.Clock()
 fps = 60
 
 # game variables
+white_pieces = ['rook', 'knight', 'bishop', 'king', 'queen', 'bishop', 'knight', 'rook',
+                'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn']
+white_locations = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
+                   (0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]
+black_pieces = ['rook', 'knight', 'bishop', 'king', 'queen', 'bishop', 'knight', 'rook',
+                'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn']
+black_locations = [(0, 7), (1, 7), (2, 7), (3, 7), (4, 7), (5, 7), (6, 7), (7, 7),
+                   (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6), (6, 6), (7, 6)]
+captured_pieces_white = []
+captured_pieces_black = []
+
+selection = 100
+valid_moves = []
+
+#load piece images 
+for i in white_pieces :
+    black_piece = 'black_' + i
+    white_piece = 'white_' + i
+    globals()[black_piece] = pygame.image.load('assets/images/'+black_piece+'.png')
+    globals()[black_piece] = pygame.transform.scale(globals()[black_piece], (80, 80))
+
+    globals()[white_piece] = pygame.image.load('assets/images/'+white_piece+'.png')
+    globals()[white_piece] = pygame.transform.scale(globals()[white_piece], (80, 80))
+    
 
 #main game loop
 
