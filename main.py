@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-WIDTH = 900 
+WIDTH = 900
 HEIGHT = 750
 
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
@@ -33,8 +33,21 @@ for i in white_pieces :
 
     globals()[white_piece] = pygame.image.load('assets/images/'+white_piece+'.png')
     globals()[white_piece] = pygame.transform.scale(globals()[white_piece], (80, 80))
-    
 
+white_images = [white_pawn, white_queen, white_king, white_knight, white_rook, white_bishop]
+black_images = [black_pawn, black_queen, black_king, black_knight, black_rook, black_bishop]
+piece_list = ['pawn', 'queen', 'king', 'knight', 'rook', 'bishop']
+
+# draw board
+def draw_board() :
+    for i in range(32):
+        column = i % 4
+        row = i // 4
+        if row % 2 == 0:
+            pygame.draw.rect(screen, 'light gray', [450 - (column * 150), row * 75, 75, 75])
+        else:
+            pygame.draw.rect(screen, 'light gray', [525 - (column * 150), row * 75, 75, 75])
+        
 #main game loop
 
 run = True
@@ -42,7 +55,7 @@ run = True
 while run :
     timer.tick(fps)
     screen.fill('dark gray')
-
+    draw_board()
     # events handling
     for event in pygame.event.get() :
         if event.type == pygame.QUIT :run = False
