@@ -1,4 +1,5 @@
 import pygame
+from PIL import Image
 
 pygame.init()
 WIDTH = 900
@@ -29,11 +30,13 @@ valid_moves = []
 for i in white_pieces :
     black_piece = 'black_' + i
     white_piece = 'white_' + i
-    globals()[black_piece] = pygame.image.load('assets/images/'+black_piece+'.png')
-    globals()[black_piece] = pygame.transform.scale(globals()[black_piece], (60, 60))
+    globals()[black_piece] = Image.open('assets/images/'+black_piece+'.png')
+    globals()[black_piece] = globals()[black_piece].resize((60,60))
+    globals()[black_piece] = pygame.image.fromstring(globals()[black_piece].tobytes(), globals()[black_piece].size, globals()[black_piece].mode)
 
-    globals()[white_piece] = pygame.image.load('assets/images/'+white_piece+'.png')
-    globals()[white_piece] = pygame.transform.scale(globals()[white_piece], (60, 60))
+    globals()[white_piece] = Image.open('assets/images/'+white_piece+'.png')
+    globals()[white_piece] = globals()[white_piece].resize((60,60))
+    globals()[white_piece] = pygame.image.fromstring(globals()[white_piece].tobytes(), globals()[white_piece].size, globals()[white_piece].mode)
 
 white_images = [white_pawn, white_queen, white_king, white_knight, white_rook, white_bishop]
 black_images = [black_pawn, black_queen, black_king, black_knight, black_rook, black_bishop]
