@@ -9,7 +9,7 @@ screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('Brookxat chess')
 timer = pygame.time.Clock()
 fps = 60
-
+game_moves = []
 # game variables
 white_pieces = ['rook', 'knight', 'bishop', 'king', 'queen', 'bishop', 'knight', 'rook',
                 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn', 'pawn']
@@ -83,8 +83,14 @@ def draw_pieces():
             if selection == i:
                 pygame.draw.rect(screen, 'blue', [black_locations[i][0] * 75 + 1, black_locations[i][1] * 75 + 1,
                                                  75, 75], 2)
-
+#check if ur king is in check 
+def is_check():
+    pass
+#check if the move doesnt put ur king in a check (illegal move)
+def is_illegal(piece,move,color) :
+    pass
 #check valid moves for all pieces
+
 def check_options(pieces,locations,turn):
     one_piece_moves = []
     all_moves = []
@@ -120,6 +126,19 @@ def check_pawn(position,color) :
         # capture on the left
         if (position[0]-1,position[1]+1) in black_locations :
             moves.append((position[0]-1,position[1]+1))
+        #en passant
+        if position[1] == 4 : 
+            print("here")
+            player,moved_piece,move = game_moves[-1]
+            if moved_piece == "pawn" :
+                
+                print("here 1")
+                start_pos,end_pos = move
+                print(game_moves)
+                if start_pos[1] == 6 and end_pos[1] == 4 and (end_pos[0] == position[0]+1 or end_pos[0] == position[0]-1) :
+                    print("here 2")
+                    moves.append((end_pos[0],5))
+
     
     if color == "black" :
         # moving one square
@@ -133,6 +152,14 @@ def check_pawn(position,color) :
             moves.append((position[0]+1,position[1]-1))
         if (position[0]-1,position[1]-1) in white_locations :
             moves.append((position[0]-1,position[1]-1))
+        #en passant
+        if position[1] == 3 : 
+            player,moved_piece,move = game_moves[-1]
+            if moved_piece == "pawn" :
+                
+                start_pos,end_pos = move
+                if start_pos[1] == 1 and end_pos[1] == 3 and (end_pos[0] == position[0]+1 or end_pos[0] == position[0]-1) :
+                    moves.append((end_pos[0],2))
     return moves
 def check_rook(position, color):
     moves = []
@@ -274,8 +301,17 @@ while run :
                     selection = white_locations.index(click_cords)
                     if turn_step == 0 : turn_step = 1
                 if click_cords in valid_moves and selection != 100 :
-                    white_locations[selection] = click_cords 
-                    if click_cords in black_locations :
+                    #to keep track of the move played in thee game (player,the moved piece, (from , to))
+                    game_moves.append(("white",white_pieces[selection],(white_locations[selection],click_cords)))
+                    white_locations[selection] = click_cords
+                    en_passant_capture = (click_cords[0], click_cords[1] - 1)
+                    # en passant carture
+                    if white_pieces[selection] == "pawn" and en_passant_capture in black_locations and click_cords not in black_locations:
+                        taken_black_piece = black_locations.index(en_passant_capture)
+                        captured_pieces_white.append(black_pieces[taken_black_piece])
+                        black_pieces.pop(taken_black_piece)
+                        black_locations.pop(taken_black_piece)
+                    if click_cords in black_locations  :
                         taken_black_piece = black_locations.index(click_cords)
                         captured_pieces_white.append(black_pieces[taken_black_piece])
                         black_pieces.pop(taken_black_piece)
@@ -293,7 +329,15 @@ while run :
                     selection = black_locations.index(click_cords)
                     if turn_step == 2 : turn_step = 3
                 if click_cords in valid_moves and selection != 100 :
+                    game_moves.append(("black",black_pieces[selection],(black_locations[selection],click_cords)))
                     black_locations[selection] = click_cords 
+                    en_passant_capture = (click_cords[0], click_cords[1] + 1)
+                    # en passant carture
+                    if black_pieces[selection] == "pawn" and en_passant_capture in white_locations and click_cords not in white_locations:
+                        taken_white_piece = white_locations.index(en_passant_capture)
+                        captured_pieces_black.append(white_pieces[taken_white_piece])
+                        white_pieces.pop(taken_white_piece)
+                        white_locations.pop(taken_white_piece)
                     if click_cords in white_locations :
                         taken_white_piece = white_locations.index(click_cords)
                         captured_pieces_black.append(white_pieces[taken_white_piece])
@@ -305,7 +349,6 @@ while run :
                     selection = 100
                     valid_moves = []
             
-        
     
     
 
